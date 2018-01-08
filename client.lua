@@ -60,7 +60,7 @@ end)
 
 function ShowHelp()
     BeginTextCommandDisplayHelp("STRING")
-    AddTextComponentSubstringPlayerName("Press ~INPUT_PICKUP~ to sell your vehicle for ~b~" .. modPrice .. "~s~!")
+    AddTextComponentSubstringPlayerName("Press ~INPUT_PICKUP~ to sell your vehicle for ~b~$" .. modPrice .. "~s~!")
     EndTextCommandDisplayHelp(0, false, true, -1)
 end
 
