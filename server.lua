@@ -1,54 +1,34 @@
-local vehicles = {
-{class = "compacts", name = "BLISTA", price = 3600},
-{class = "compacts", name = "BLISTA2", price = 3600},
-{class = "compacts", name = "BLISTA3", price = 3600},
-{class = "compacts", name = "BRIOSO", price = 3600},
-{class = "compacts", name = "DILETTAN", price = 3600},
-{class = "compacts", name = "ISSI2", price = 3600},
-{class = "compacts", name = "PANTO", price = 3600},
-{class = "compacts", name = "PRAIRIE", price = 3600},
-{class = "compacts", name = "RHAPSODY", price = 3600},
-{class = "offroad", name = "TROPHY", price = 4200},
-{class = "offroad", name = "TROPHY2", price = 4200},
-{class = "offroad", name = "BLAZER", price = 4200},
-{class = "offroad", name = "BLAZER2", price = 4200},
-{class = "offroad", name = "BLAZER3", price = 4200},
-{class = "offroad", name = "BLAZER4", price = 4200},
-{class = "offroad", name = "DUBSTA", price = 4200},
-{class = "offroad", name = "DUBSTA3", price = 4200},
-{class = "offroad", name = "MONSTER", price = 4200},
-{class = "offroad", name = "MARSHALL", price = 4200}, 
-{class = "offroad", name = "INSURGENT", price = 4200},
-{class = "offroad", name = "INSURGENT2", price = 4200},
-{class = "offroad", name = "TECHNICAL", price = 4200},
-{class = "offroad", name = "BFINJECT", price = 4200},
-{class = "offroad", name = "BODHI2", price = 4200},
-{class = "offroad", name = "DUNE", price = 4200},
-{class = "offroad", name = "DUNE2", price = 4200},
-{class = "offroad", name = "DLOADER", price = 4200},
-{class = "offroad", name = "MESA", price = 4200},
-{class = "offroad", name = "RANCHERX", price = 4200},
-{class = "offroad", name = "REBEL01", price = 4200},
-{class = "offroad", name = "REBEL02", price = 4200},
-{class = "offroad", name = "SANDKING", price = 4200},
-{class = "offroad", name = "SANDKIN2", price = 4200},
-{class = "offroad", name = "BRAWLER", price = 4200},
-{class = "test", name = "TORNADO2", price = 2222}
+local prices = {
+{id = 0, price = 3600}, --compacts
+{id = 1, price = 4000}, --sedans
+{id = 2, price = 5200}, --SUV's
+{id = 3, price = 6400}, --coupes
+{id = 4, price = 5000}, --muscle
+{id = 5, price = 6500}, --sport classic
+{id = 6, price = 7200}, --sport
+{id = 7, price = 11000}, --super
+{id = 8, price = 2200}, --motorcycle
+{id = 9, price = 3800}, --offroad
+{id = 10, price = 4400}, --industrial
+{id = 11, price = 3400}, --utility
+{id = 12, price = 3400}, --vans
+{id = 13, price = 400}, --bicycles
+{id = 14, price = 2000}, --boats
+{id = 15, price = 8200}, --helicopter
+{id = 16, price = 9000}, --plane
+{id = 17, price = 2900}, --service
+{id = 18, price = 5000}, --emergency
+{id = 19, price = 6200}, --military
+{id = 20, price = 3400} --commercial
 }
 
-RegisterServerEvent("baseevents:enteredVehicle")
-AddEventHandler("baseevents:enteredVehicle", function(veh, seat, displayName)
-	local vehPrice = nil
-	
-	for k, veh in pairs(vehicles) do
-		if displayName == veh.name then
-			vehPrice = veh.price
-			TriggerClientEvent("getVehPrice", -1, vehPrice)
+RegisterServerEvent("getVehPrice")
+AddEventHandler("getVehPrice", function(class)
+	for k, price in pairs(prices) do
+		if class == price.id then
+			vehPrice = price.price
+			TriggerClientEvent("setVehPrice", -1, vehPrice)
 		end
-	end
-	
-	if seat == -1 and vehPrice ~= nil then
-		print(GetPlayerName(source) .. " is driving a " .. displayName .. "!" .. " and the price is: " .. vehPrice)
 	end
 end)
 

@@ -28,7 +28,11 @@ Citizen.CreateThread(function()
 		end
 		
 		--load marker if player is in vehicle
-		if IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then			
+		if IsPedSittingInAnyVehicle(GetPlayerPed(-1)) then		
+			local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+			local class = GetVehicleClass(vehicle)
+			
+			TriggerServerEvent("getVehPrice", class)
 			DrawMarker(1, 2505.325, 4214.261, 38.5, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 4.0, 4.0, 2.0, 255, 0, 0, 100, false, true, 1, false, false, false, false)
 		end
 		
@@ -41,7 +45,7 @@ Citizen.CreateThread(function()
 		
 		--ability to sell car if in range of chop shop
 		if IsPedSittingInAnyVehicle(GetPlayerPed(-1)) and distance <= 4.0 then
-			drawText()
+			ShowHelp()
 			if IsControlPressed(1, 38) then
 				sellVehicle()
 			end
@@ -49,29 +53,15 @@ Citizen.CreateThread(function()
 	end
 end)
 
-RegisterNetEvent("getVehPrice")
-AddEventHandler("getVehPrice", function(price)
+RegisterNetEvent("setVehPrice")
+AddEventHandler("setVehPrice", function(price)
 	vehPrice = price
 end)
 
-function drawText()
-	SetTextFont(0)
-	SetTextProportional(1)
-	SetTextScale(0.0, 0.5)
-	SetTextColour(255, 255, 255, 255)
-	SetTextDropshadow(0, 0, 0, 0, 255)
-	SetTextEdge(2, 0, 0, 0, 255)
-	SetTextDropshadow()
-	SetTextOutline()
-	SetTextCentre(1)
-	SetTextEntry("String")
-	if vehPrice == nil then
-		AddTextComponentString("The chop shop will not buy this vehicle!")
-	else
-		AddTextComponentString("Press key INPUT_PICKUP (default E) to sell your vehicle for $" .. modPrice .. "!")
-	end
-	DrawText( 0.5, 0.8 )
-
+function ShowHelp()
+    BeginTextCommandDisplayHelp("STRING")
+    AddTextComponentSubstringPlayerName("Press ~INPUT_PICKUP~ to sell your vehicle for ~b~" .. modPrice .. "~s~!")
+    EndTextCommandDisplayHelp(0, false, true, -1)
 end
 
 function sellVehicle()
@@ -89,24 +79,3 @@ function round(num, numDecimalPlaces)
 	local mult = 10^(numDecimalPlaces or 0)
 	return math.floor(num * mult + 0.5) / mult
 end
-
-
-
---development commands
-RegisterCommand("currentveh", function(source, args, rawCommand)
-	local currentVeh = GetDisplayNameFromVehicleModel(GetEntityModel(GetVehiclePedIsIn(GetPlayerPed(-1), false)))
-	
-	TriggerEvent("chatMessage", "In vehicle: " .. currentVeh .. " Worth: " .. vehPrice)
-end)
-
-RegisterCommand("resetmoney", function(source, args, rawCommand)
-	TriggerServerEvent("resetMoney")
-end)
-
-RegisterCommand("health", function(source, args, rawCommand)
-	local health = GetEntityHealth(GetVehiclePedIsIn(GetPlayerPed(-1)))
-	modifier = health/1000
-	modPrice = modifier * vehPrice
-	
-	TriggerEvent("chatMessage", "Health = " .. health .. " the price is: " .. modPrice)
-end)
